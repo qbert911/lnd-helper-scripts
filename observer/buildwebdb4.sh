@@ -12,7 +12,7 @@ while : ;do
 #-----------------
 dirty=false
 while read thisID f2 f3 f4 f5; do
-    if ! test -f "pages/$thisID.html" || test "`find pages/$thisID.html -mmin +30`" || test -f "mismatch.txt";then  #freshness check
+    if ! test -f "pages/$thisID.html" || test "`find pages/$thisID.html -mmin +30`" || test -f "mismatch.txt" || ! test -f "webdata.txt" ;then  #freshness check
       dirty=true;fi
 done < nodelist-temp.txt
 if [ "$dirty" = true ];then
@@ -28,7 +28,7 @@ if [ "$dirty" = true ];then
         for (( c=1; c<=$(( $barlen  / $myrecs / 2 )); c++ )); do echo -n -e "\e[38;5;235m=\e[0m";done          #draw bar segment
       fi #download html
       if eval head -n 200 "pages/$thisID.html" | grep -q 'globe';then
-           thisgeodata=`eval head -n 200 pages/$thisID.html|grep -A4 "globe"|pup a text{}| tr '\n' ','`
+        thisgeodata=`eval head -n 200 pages/$thisID.html|grep -A4 "globe"|pup a,li text{}| tr '\n' ','`
       else thisgeodata=" ,--,--,";fi
         hex=`eval head -n 200 pages/$thisID.html| grep -A1 '<h5>Color</h5>' | pup span text{} | jq -r -R '.[1:7]'`
         r=$(printf '0x%0.2s' "$hex"); g=$(printf '0x%0.2s' ${hex#??}); b=$(printf '0x%0.2s' ${hex#????})  #hex to anso color conversion
