@@ -35,7 +35,7 @@ if [ "$dirty" = true ];then
       thiscolor=$(echo -e `printf "%03d" "$(((r<75?0:(r-35)/40)*6*6+(g<75?0:(g-35)/40)*6+(b<75?0:(b-35)/40)+16))"`)"m"
       thisnode=`eval head -n 200 pages/$thisID.html|grep     "<h1>Node" |pup h1 text{}| tr -d '()'`
       thiscapacity=`eval head -n 200 pages/$thisID.html|grep -A1 "<h5>Capacity" |pup span text{}`
-      thisconnectedcount=`eval head -n 200 pages/$thisID.html|grep -A1 "<h5>Connected Node Count</h5>" |pup span text{}`
+      thisconnectedcount=`eval head -n 200 pages/$thisID.html|grep -A1 "<h5>Connected Node Count</h5>" |pup span text{}| sed 's/,//'`
       thisage=`eval head -n 300 pages/$thisID.html| grep -A1 '<h5>Age</h5>' | pup span text{}`
       avgchancap=`eval cat pages/$thisID.html| grep -A1 '<h5 class="inline">Capacity</h5>'| pup span text{} | jq -r -R '.[0:-4]' | jq -s add/length`
       thisbiggestchan=`eval cat pages/$thisID.html| grep -A1 '<h5 class="inline">Capacity</h5>'| pup span text{} | jq -r -R '.[0:-4]' | jq -s max`
