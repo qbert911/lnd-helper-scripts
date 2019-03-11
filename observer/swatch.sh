@@ -8,7 +8,7 @@ while : ;do
   eval lncli listchannels > rawout.txt
   cat rawout.txt | jq -r '.channels[] | [.remote_pubkey,.capacity,.local_balance,.remote_balance,(.active|tostring),(.initiator|tostring),.commit_fee,.commit_weight,.fee_per_kw] | join("," )' > nodelist.txt
   eval lncli pendingchannels > rawoutp.txt
-  cat rawoutp.txt | jq -r '.pending_open_channels[]|[.channel.remote_node_pub,.channel.capacity,.channel.local_balance,.channel.remote_balance,("pendo " + (.confirmation_height|tostring)),"true",.commit_fee] | join("," )' >> nodelist.txt
+  cat rawoutp.txt | jq -r '.pending_open_channels[]|[.channel.remote_node_pub,.channel.capacity,.channel.local_balance,.channel.remote_balance,"pendo","true",.commit_fee] | join("," )' >> nodelist.txt
   cat rawoutp.txt | jq -r '.waiting_close_channels[]|[.channel.remote_node_pub,.channel.capacity,.channel.local_balance,.channel.remote_balance,"pend c","true","0"] | join("," )' >> nodelist.txt
   cat rawoutp.txt | jq -r '.pending_closing_channels[]|[.channel.remote_node_pub,.channel.capacity,.channel.local_balance,.channel.remote_balance,"pend c","true","0"] | join("," )' >> nodelist.txt
   cat rawoutp.txt | jq -r '.pending_force_closing_channels[]|[.channel.remote_node_pub,.channel.capacity,.channel.local_balance,.channel.remote_balance,"pend c","true","0"] | join("," )' >> nodelist.txt
