@@ -8,7 +8,7 @@ commitfees=`eval lncli listchannels | jq -s '[.[].channels[]|select(.initiator==
 
 
 echo "Age--Amount-----Fee-----Txns:  ${bal2}"
-lncli listchaintxns | jq -r '.transactions[]|[.num_confirmations,(.amount|tostring),.total_fees|tostring]|join("," )'|sort -grt, |column -ts, -n 
+lncli listchaintxns | jq -r '.transactions[]|[.num_confirmations,(.amount|tostring),.total_fees|tostring]|join("," )'|sort -grt, |column -ts, -n
 
 echo "Age--Amount-------------Coins: ${bal1}"
 lncli listunspent |jq -r '.utxos[]|[.confirmations,.amount_sat|tostring]|join(",")'|sort -grt, |column -ts,
@@ -28,7 +28,7 @@ echo "-------- Income: -------"
 lncli feereport | jq -r '.month_fee_sum'
 
 echo "------- Pending: -------"
-lncli pendingchannels |jq -r '.total_limbo_balance'
+lncli pendingchannels | jq -r '[.pending_open_channels[].channel.capacity]|add'
 
 
 #echo "Mine---Fee---Lbs--P/kw-------------------------------------Committed: ${commitfees}"
