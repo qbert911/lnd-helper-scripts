@@ -55,7 +55,7 @@ incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14
   #--------------combiner-------------------------------------------------------
   data_table=`cat combined.txt|sort --field-separator=',' -k 6,6 -k 4`
   echo -e "${data_table}" > myout.txt
-  OUTPUTME=`cat combined-header.txt myout.txt| column -n -ts,`
+  OUTPUTME=`cat combined-header. myout.txt| column -n -ts,`
   clear
   
 mybalc=$(( ${mybalance} + ${commitfees} ))

@@ -1,3 +1,5 @@
 observer/pages/
 *.*~
 *.txt
+*.csv
+*.swp

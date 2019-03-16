@@ -1,6 +1,6 @@
 #!/bin/bash
 while : ; do
-  OUTPUTME=`cat combined-header.txt myout.txt | column -tns,`
+  OUTPUTME=`cat combined-header. myout.txt | column -tns,`
   clear
   echo -e "${OUTPUTME}"
   ball=$((139))
