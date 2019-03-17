@@ -45,7 +45,7 @@ balance="'\e[38;5;232m'___________'\e[0m'${balance}";balance="${balance:0:14}${b
 incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14}${incoming: -17}";
 	if   [ "$state"   = "" ];then country=$city ;              city=""
 	elif [ "$country" = "" ];then country=$state; state=$city; city="";fi
-      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,$title,${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,$city,$state,$country,$cf"`   #,$cw,$fpk
+      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,$title,${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
     else
       OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,MISMATCHingWebdata,${cstate:0:8},$init, , , , , , , , , , ,"`
       echo -e "${OUTPUTME}\a" >> mismatch.txt
@@ -57,7 +57,7 @@ incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14
   echo -e "${data_table}" > myout.txt
   OUTPUTME=`cat combined-header. myout.txt| column -n -ts,`
   clear
-  
+
 mybalc=$(( ${mybalance} + ${commitfees} ))
 incc=$(( ${cap_balance} + ${ocommitfees} ))
 
