@@ -41,11 +41,15 @@ if [[ -n "$balance" ]];then balance="           ${balance}";balanceA="${balance:
 balance="${balanceA// /} ${balanceB// /} ${balanceC// /}";balance="${balance/  /}";fi
 
   title=`eval lncli getnodeinfo ${thisID} |jq -r '.node.alias'| tr -d "<')(>"`
+  ipexam=`eval lncli getnodeinfo ${thisID} |jq -r '.node.addresses[].addr'`
+  ipstatus="-ip4-";ipcolor="001m"
+  if [[ $ipexam == *"n:"* ]];then ipstatus="onion";ipcolor="122m";fi
+  if [[ $ipexam == *":"*":"* ]];then ipstatus="mixed";ipcolor="111m";fi
 balance="'\e[38;5;232m'___________'\e[0m'${balance}";balance="${balance:0:14}${balance: -17}";
 incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14}${incoming: -17}";
 	if   [ "$state"   = "" ];then country=$city ;              city=""
 	elif [ "$country" = "" ];then country=$state; state=$city; city="";fi
-      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,"$title",${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
+      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,"$title",'\e[38;5;$ipcolor' $ipstatus'\e[0m',${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
     else
       OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,MISMATCHingWebdata,${cstate:0:8},$init, , , , , , , , ,"`
       echo -e "${OUTPUTME}\a" >> mismatch.txt
@@ -53,7 +57,7 @@ incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14
     echo "${OUTPUTME}" >> combined.txt
   done <nodelist.txt 3<webdata.txt
   #--------------combiner-------------------------------------------------------
-  data_table=`cat combined.txt|sort --field-separator=',' -k 6,6 -k 4`
+  data_table=`cat combined.txt|sort --field-separator=',' -k 7,7 -k 5,5 -k 4`
   echo -e "${data_table}" > myout.txt
   OUTPUTME=`cat combined-header. myout.txt| column -n -ts,`
   clear
