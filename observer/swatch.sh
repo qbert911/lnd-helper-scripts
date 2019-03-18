@@ -26,7 +26,7 @@ while : ;do
   #--------------combiner-------------------------------------------------------
   rm -f combined.txt
   sort nodelist.txt -o nodelist.txt
-  while read -r thisID capacity balance incoming cstate init cf cw fpk && read -r thatID title thiscapacity thisconnectedcount avgchancap thisbiggestchan age color city state country <&3; do
+  while read -r thisID capacity balance incoming cstate init cf cw fpk && read -r thatID title thiscapacity thisconnectedcount avgchancap thisbiggestchan age color city state country junk <&3; do
     : $((recs++))
     if [ "$thisID" = "$thatID" ];then
   	if [ "$init"   = "true" ];then balance=$(( $balance + $cf ))
@@ -40,14 +40,14 @@ if [[ -n "$incoming" ]];then incoming="          ${incoming}";incomingA="${incom
 if [[ -n "$balance" ]];then balance="           ${balance}";balanceA="${balance:(-9):3}";balanceB="${balance:(-6):3}";balanceC="${balance:(-3):3}";
 balance="${balanceA// /} ${balanceB// /} ${balanceC// /}";balance="${balance/  /}";fi
 
-
+  title=`eval lncli getnodeinfo ${thisID} |jq -r '.node.alias'| tr -d "<')(>"`
 balance="'\e[38;5;232m'___________'\e[0m'${balance}";balance="${balance:0:14}${balance: -17}";
 incoming="'\e[38;5;232m'...........'\e[0m'${incoming}";incoming="${incoming:0:14}${incoming: -17}";
 	if   [ "$state"   = "" ];then country=$city ;              city=""
 	elif [ "$country" = "" ];then country=$state; state=$city; city="";fi
-      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,$title,${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
+      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,"$title",${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
     else
-      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,MISMATCHingWebdata,${cstate:0:8},$init, , , , , , , , , , ,"`
+      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,MISMATCHingWebdata,${cstate:0:8},$init, , , , , , , , ,"`
       echo -e "${OUTPUTME}\a" >> mismatch.txt
     fi
     echo "${OUTPUTME}" >> combined.txt
