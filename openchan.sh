@@ -18,9 +18,9 @@ echo
 if [[ $myconnections == *$thisID* || $mypending == *$thisID* ]];then
 	echo -e "\nHEY DUMMY"
 else
-	read -p "Are you sure? " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]];then
-		echo -e "\nOK..."
-		lncli openchannel --sat_per_byte 1 --connect $ip $thisID $2 0
+	if [[ $3 == "hot" ]];then
+			eval "lncli openchannel --sat_per_byte 1 --connect $ip $thisID $2 0"
+	else
+			echo "openchannel --sat_per_byte 1 --connect $ip $thisID $2 0" | xargs -p lncli
 	fi
 fi
