@@ -5,7 +5,7 @@ thisID=`eval echo ${1} | cut -d"@" -f 1`
 ip=`eval echo ${1} | cut -d"@" -f 2`
 
 if [[ -n "$ip" ]];then
-	ip=`eval lncli getnodeinfo ${thisID} |jq -r '.node.addresses[].addr'`
+	ip=`eval lncli getnodeinfo ${thisID} |jq 'first(.node.addresses[].addr)'`
 	echo "Looking up ip..."
 fi
 

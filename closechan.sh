@@ -19,5 +19,5 @@ read -p "Are you sure you want CLOSE? " -n 1 -r
 echo
 
 else
-	lncli listchannels | jq -r '.channels[] | [.remote_pubkey[0:6],.capacity,.local_balance,.remote_balance,.channel_point]|join(",")'|column -n -ts,
+	lncli listchannels | jq -r '.channels[] | [.remote_pubkey[0:6],.capacity,.local_balance,.remote_balance,.channel_point]|join(",")'|sort --field-separator=',' -k 1|sort --field-separator=',' -n -k 3,3 |column -n -ts,
 fi

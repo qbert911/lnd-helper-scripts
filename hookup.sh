@@ -1,5 +1,6 @@
 #!/bin/bash
 if [[ -n "$1" ]];then
+  echo "nodeconnectednodecount"
   curl --silent "https://1ml.com/node?order=nodeconnectednodecount&active=true&iponionservice=true" -o listofonionnodes.html
 else 
   curl --silent "https://1ml.com/node?order=capacity&active=true&iponionservice=true" -o listofonionnodes.html
