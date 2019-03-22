@@ -18,6 +18,9 @@ echo "-------- Costs: --------"
 openingfees=`eval lncli listchaintxns | jq -r '[.transactions[]|.total_fees|tonumber]|add'`
 echo "${openingfees} in channel opening fees"
 
+closingfees=`eval lncli closedchannels | jq -r '[.channels[]|select(.settled_balance!="0")|(.capacity|tonumber)-(.settled_balance|tonumber)]|add-1000000'`
+echo "${closingfees} in channel closing costs"
+
 litpayments=`eval lncli listpayments | jq -r '[.payments[]|.fee|tonumber]|add'`
 echo "${litpayments} in lightning payment fees"
 

@@ -2,6 +2,7 @@
 IFS=","
 myconnections=`eval lncli listchannels | jq -r '.channels[].remote_pubkey'`
 mypending=`eval lncli pendingchannels | jq -r '.pending_open_channels[].channel.remote_node_pub'`
+mypendingc=`eval lncli pendingchannels | jq -r '.pending_force_closing_channels[].channel.remote_node_pub'`
 blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="REMOTE_FORCE_CLOSE") |.remote_pubkey'`
 
 while read -r thisID channels; do
@@ -9,7 +10,7 @@ while read -r thisID channels; do
 	ip=`eval lncli getnodeinfo ${thisID} |jq -r '.node.addresses[].addr'`
   capa=`eval lncli getnodeinfo ${thisID} |jq -r '.total_capacity'`
   title=`eval lncli getnodeinfo ${thisID} |jq -r '.node.alias'`
-	if [[ $myconnections == *$thisID* || $mypending == *$thisID* ]];then
+  if [[ $myconnections == *$thisID* || $mypending == *$thisID* || $mypendingc == *$thisID* ]];then
 		status="connected";color="111m";thisIDd=$thisID; : $((recse++))
 		if [[ $ip == *"n:"* ]];then status="allset";color="122m";thisIDd=""; : $((recsc++));fi
 		if [[ $ip == *":"*":"* ]];then status="CONmix";color="111m";thisIDd=$thisID; : $((recse++));fi	
