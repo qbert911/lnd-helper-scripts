@@ -12,13 +12,13 @@ echo "Age--Amount-------------Coins: ${bal1}"
 lncli listunspent |jq -r '.utxos[]|[.confirmations,.amount_sat|tostring]|join(",")'|sort -grt, |column -ts,
 
 echo "Age--Amount- Closed Channels ----Capacity-Remote"
-lncli closedchannels | jq -r '.channels[]|['$currheight'-(.close_height|tonumber),.settled_balance,.close_type, .capacity,(.capacity|tonumber)-(.settled_balance|tonumber)|tostring]|join(",")'|column -ts,
+lncli closedchannels | jq -r '.channels[]|['$currheight'-(.close_height|tonumber),.settled_balance,.close_type, .capacity,.time_locked_balance,(.capacity|tonumber)-(.settled_balance|tonumber)|tostring]|join(",")'|column -ts,
 
 echo "-------- Costs: --------"
 openingfees=`eval lncli listchaintxns | jq -r '[.transactions[]|.total_fees|tonumber]|add'`
 echo "${openingfees} in channel opening fees"
 
-closingfees=`eval lncli closedchannels | jq -r '[.channels[]|select(.settled_balance!="0")|(.capacity|tonumber)-(.settled_balance|tonumber)]|add-1000000'`
+closingfees=`eval lncli closedchannels | jq -r '[.channels[]|select(.settled_balance!="0")|(.capacity|tonumber)-(.settled_balance|tonumber)]|add-1500000'`
 echo "${closingfees} in channel closing costs"
 
 litpayments=`eval lncli listpayments | jq -r '[.payments[]|.fee|tonumber]|add'`

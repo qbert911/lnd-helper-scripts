@@ -1,10 +1,12 @@
 #!/bin/bash
 myconnections=`eval lncli listchannels | jq -r '.channels[].remote_pubkey'`
 mypending=`eval lncli pendingchannels | jq -r '.pending_open_channels[].channel.remote_node_pub'`
+mypendingc=`eval lncli pendingchannels | jq -r '.pending_force_closing_channels[].channel.remote_node_pub'`
+blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="REMOTE_FORCE_CLOSE"  or .close_type=="LOCAL_FORCE_CLOSE") |.remote_pubkey'`
 thisID=`eval echo ${1} | cut -d"@" -f 1`
 ip=`eval echo ${1} | cut -d"@" -f 2`
 
-if [[ -n "$ip" ]];then
+if [[ $ip != *":"* ]];then
 	ip=`eval lncli getnodeinfo ${thisID} |jq 'first(.node.addresses[].addr)'`
 	echo "Looking up ip..."
 fi
@@ -15,7 +17,7 @@ curl -s https://1ml.com/node/$thisID |grep "<h1>Node" |pup h1 text{}| tr -d '()'
 echo $2 satoshis
 echo $(echo "scale=8; $2 / 100000000" | bc -ql ) btc
 echo
-if [[ $myconnections == *$thisID* || $mypending == *$thisID* ]];then
+if [[ $myconnections == *$thisID* || $mypending == *$thisID* || $mypendingc == *$thisID* || $blacklist == *$thisID* ]];then
 	echo -e "\nHEY DUMMY"
 else
 	if [[ $3 == "hot" ]];then

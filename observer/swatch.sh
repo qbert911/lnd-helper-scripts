@@ -28,6 +28,7 @@ while : ;do
 	unc=`eval lncli walletbalance |jq -r '.unconfirmed_balance'`
   income=`eval lncli feereport | jq -r '.month_fee_sum'`
   limbo=`eval lncli pendingchannels | jq -r '.total_limbo_balance'`
+  limbot=`eval lncli pendingchannels |grep _matur| cut -d":" -f2|tr -d "\n,"`
   recs=$((-1))  #so we don't count self
   eval lncli getinfo | jq -r '[.identity_pubkey,"","'${mybalc}'","'${incc}'","--me--"," "," "," "," "]| join("," )' >> nodelist.txt  #add own node to list
 #--------------combiner-------------------------------------------------------
@@ -51,16 +52,16 @@ while : ;do
       title=`eval lncli getnodeinfo ${thisID} |jq -r '.node.alias'| tr -d "<')(>"`
       ipexam=`eval lncli getnodeinfo ${thisID} |jq -r '.node.addresses[].addr'`
       ipstatus="-ip4-";ipcolor="001m"
-      if [[ $ipexam == *"n:"* ]];then ipstatus="onion";ipcolor="122m";fi
+      if [[ $ipexam == *"n:"* ]];then ipstatus="onion";ipcolor="113m";fi
       if [[ $ipexam == *":"*":"* ]];then ipstatus="mixed";ipcolor="111m";fi
-      if [[ $ipexam == *"n:"*"n:"* ]];then ipstatus="onion";ipcolor="122m";fi
+      if [[ $ipexam == *"n:"*"n:"* ]];then ipstatus="onion";ipcolor="113m";fi
       if [[ $ipexam == *":"*":"*":"* ]];then ipstatus="mixed ";ipcolor="111m";fi
       if   [ "$state"   = "" ];then country=$city ;              city=""
     	elif [ "$country" = "" ];then country=$state; state=$city; city="";fi
 #--------------processing 
       OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,"$title",'\e[38;5;$ipcolor' $ipstatus'\e[0m',${cstate:0:8},$init,$thisconnectedcount,${thiscapacity:0:6},${avgchancap:0:6},${thisbiggestchan:0:6},$age,${city:0:13},${state:0:5},${country:0:6},$cf"`   #,$cw,$fpk
     else
-      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7},$balance,$incoming,MISMATCHingWebdata,${cstate:0:8},$init',- ,- ,- ,- ,- ,- ,- ,- ,-'"`
+      OUTPUTME=`eval echo "'\e[38;5;$color'${thisID:0:2}'\e[0m'${thisID:2:7}"`
       echo -e "${OUTPUTME}\a" >> mismatch.txt
     fi
     echo "${OUTPUTME}" >> combined.txt
@@ -74,6 +75,6 @@ while : ;do
   if [[ -n "$walletbal" ]];then walletbal="             ${walletbal}";walletbalA="${walletbal:(-9):3}";walletbalB="${walletbal:(-6):3}";walletbalC="${walletbal:(-3):3}";walletbal="${walletbalA// /} ${walletbalB// /} ${walletbalC// /}";walletbal="${walletbal/  /}";fi
   if [[ -n "$mybalc" ]];then mybalc="          ${mybalc}";mybalcA="${mybalc:(-9):3}";mybalcB="${mybalc:(-6):3}";mybalcC="${mybalc:(-3):3}";mybalc="${mybalcA// /} ${mybalcB// /} ${mybalcC// /}";mybalc="${mybalc/  /}";fi
   clear
-  echo -e "${OUTPUTME}\nChans: \e[38;5;45m${recs}\e[0m ${reco}/${reci}  \e[38;5;157m${mybalc} \e[0m \e[38;5;183m ${incc}\e[0m \e[38;5;113m ${walletbal}\e[0m in wallet (${unc} unconfirmed) ${limbo} in limbo (${unset_balanceo} / ${unset_balancei} unsettled ${unset_times})	Income: \e[38;5;83m${income}\e[0m"
+  echo -e "${OUTPUTME}\nChans: \e[38;5;45m${recs}\e[0m ${reco}/${reci}  \e[38;5;157m${mybalc} \e[0m \e[38;5;183m ${incc}\e[0m \e[38;5;113m ${walletbal}\e[0m in wallet (${unc} unconfirmed) (${limbo} in limbo$limbot) (${unset_balanceo} / ${unset_balancei} unsettled ${unset_times})	Income: \e[38;5;83m${income}\e[0m"
   secsi=$((7));while [ $secsi -gt -1 ]; do echo -ne "$secsi\033[0K\r";sleep 1; : $((secsi--));done   #countdown
 done
