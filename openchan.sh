@@ -13,12 +13,14 @@ fi
 
 echo $ip
 echo $thisID
+echo
 curl -s https://1ml.com/node/$thisID |grep "<h1>Node" |pup h1 text{}| tr -d '()'
+echo
 echo $2 satoshis
 echo $(echo "scale=8; $2 / 100000000" | bc -ql ) btc
 echo
-if [[ $myconnections == *$thisID* || $mypending == *$thisID* || $mypendingc == *$thisID* || $blacklist == *$thisID* ]];then
-	echo -e "\nHEY DUMMY"
+if [[ $3 != "force" && $myconnections == *$thisID* || $mypending == *$thisID* || $mypendingc == *$thisID* || $blacklist == *$thisID* ]];then
+	echo -e "\nHEY DUMMY already connected to this node"
 else
 	if [[ $3 == "hot" ]];then
 			eval "lncli openchannel --sat_per_byte 1 --connect $ip $thisID $2 0"

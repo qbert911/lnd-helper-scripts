@@ -42,4 +42,4 @@ if [[ -n "$thisID5" ]];then
 fi
 echo 
 done <routelist.csv
-  echo -e "$recs routes sending ${t2} satoshi to \e[38;5;122m$titletarget\e[0m"
+echo -e "$recs routes sending ${t2} satoshi to \e[38;5;122m$titletarget\e[0m"

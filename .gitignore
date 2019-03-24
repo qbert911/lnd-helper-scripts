@@ -1,5 +1,6 @@
-observer/pages/
+lndwatcher/pages/
 *.*~
 *.txt
 *.csv
 *.swp
+*.json
