@@ -35,4 +35,4 @@ if (( $min == "1" ));then
     echo
   fi
 fi
-done < listofonionnodes.txt
+done < nodelistonions.txt
