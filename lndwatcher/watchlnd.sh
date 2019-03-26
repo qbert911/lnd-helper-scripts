@@ -29,6 +29,7 @@ while : ;do
   income=`eval lncli feereport | jq -r '.month_fee_sum'`
   limbo=`eval lncli pendingchannels | jq -r '.total_limbo_balance'`
   limbot=`eval lncli pendingchannels |grep _matur| cut -d":" -f2|tr -d "\n,"`
+  fwding=`eval lncli fwdinghistory |jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'`
   recs=$((-1))  #so we don't count self
   eval lncli getinfo | jq -r '[.identity_pubkey,"","'${mybalc}'","'${incc}'","--me--"," "," "," "," "]| join("," )' >> nodelist.txt  #add own node to list
 #--------------combiner-------------------------------------------------------
@@ -75,6 +76,6 @@ while : ;do
   if [[ -n "$walletbal" ]];then walletbal="             ${walletbal}";walletbalA="${walletbal:(-9):3}";walletbalB="${walletbal:(-6):3}";walletbalC="${walletbal:(-3):3}";walletbal="${walletbalA// /} ${walletbalB// /} ${walletbalC// /}";walletbal="${walletbal/  /}";fi
   if [[ -n "$mybalc" ]];then mybalc="          ${mybalc}";mybalcA="${mybalc:(-9):3}";mybalcB="${mybalc:(-6):3}";mybalcC="${mybalc:(-3):3}";mybalc="${mybalcA// /} ${mybalcB// /} ${mybalcC// /}";mybalc="${mybalc/  /}";fi
   clear
-  echo -e "${OUTPUTME}\nChans: \e[38;5;45m${recs}\e[0m ${reco}/${reci}  \e[38;5;157m${mybalc} \e[0m \e[38;5;183m ${incc}\e[0m \e[38;5;113m ${walletbal}\e[0m in wallet (${unc} unconfirmed) (${limbo} in limbo$limbot) (${unset_balanceo} / ${unset_balancei} unsettled ${unset_times})	Income: \e[38;5;83m${income}\e[0m"
-  secsi=$((2));while [ $secsi -gt -1 ]; do echo -ne "$secsi\033[0K\r";sleep 1; : $((secsi--));done   #countdown
+  echo -e "${OUTPUTME}\nChans: \e[38;5;45m${recs}\e[0m ${reco}/${reci}  \e[38;5;157m${mybalc} \e[0m \e[38;5;183m ${incc}\e[0m \e[38;5;113m ${walletbal}\e[0m in wallet (${unc} unconfirmed) (${limbo} in limbo$limbot) (${unset_balanceo} / ${unset_balancei} unsettled ${unset_times})	Income: \e[38;5;83m${income}\e[0m  ${fwding}"
+  secsi=$((5));while [ $secsi -gt -1 ]; do echo -ne "$secsi\033[0K\r";sleep 1; : $((secsi--));done   #countdown
 done
