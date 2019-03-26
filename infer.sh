@@ -7,9 +7,9 @@ mypendingc=`eval lncli pendingchannels | jq -r '.pending_force_closing_channels[
 blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="REMOTE_FORCE_CLOSE" or .close_type=="LOCAL_FORCE_CLOSE") |.remote_pubkey'`
 recscb=$(( 0 ))
 threshold="20000000"
-echo "Searching all known nodes..."
+echo -n "Searching all known nodes..."
 lncli describegraph | jq -r '[.nodes[]|select(.addresses[].addr|contains("onion"))|.pub_key]|unique|.[]' > nodelistonions.txt
-echo -n "$( wc -l nodelistonions.txt | sed -e 's/ .*//') found with an .onion address"
+echo -e -n "\n $( wc -l nodelistonions.txt | sed -e 's/ .*//') found with an .onion address"
 while read -r thisID extradata; do
   : $((recs++))
   capa=`eval lncli getnodeinfo ${thisID} |jq -r '.total_capacity'`
@@ -46,5 +46,5 @@ fi
   echo -n "."
 done <nodelistonions.txt
 	boop=`cat midway.txt |sort -g -r --field-separator=',' -k 2,2 -k 3 | column -ts,`
-	echo -e "\n${boop}\n\n$(( $recs - $recssm )) nodes with an .onion address over threshold of $threshold satoshi :   \e[38;5;122m$recstg targets    \e[38;5;241m$recstb mixed    \e[38;5;113m$recscg connected pure onion   \e[38;5;111m$recscb connected mixed\n"
-rm -f midway.txt
+	echo -e "\n${boop}\n\n$(( $recs - $recssm )) nodes with an .onion address over threshold of $threshold satoshi :   \e[38;5;122m$recstg targets    \e[38;5;241m$recstb undesireable    \e[38;5;113m$recscg connected pure onion   \e[38;5;111m$recscb connected mixed\n"
+rm -f midway.txt nodelistonions.txt
