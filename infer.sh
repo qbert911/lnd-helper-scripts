@@ -8,8 +8,8 @@ blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="R
 recscb=$(( 0 ))
 threshold="20000000"
 echo "Searching all known nodes..."
-lncli describegraph | jq -r '[.nodes[]|select(.addresses[].addr|contains("onion"))|.pub_key]|unique|.[]' > listofonionnodes.txt
-echo -n "$( wc -l listofonionnodes.txt | sed -e 's/ .*//') found with an .onion address"
+lncli describegraph | jq -r '[.nodes[]|select(.addresses[].addr|contains("onion"))|.pub_key]|unique|.[]' > nodelistonions.txt
+echo -n "$( wc -l nodelistonions.txt | sed -e 's/ .*//') found with an .onion address"
 while read -r thisID extradata; do
   : $((recs++))
   capa=`eval lncli getnodeinfo ${thisID} |jq -r '.total_capacity'`
@@ -44,7 +44,7 @@ else
                                     : $((recssm++))        
 fi
   echo -n "."
-done <listofonionnodes.txt
+done <nodelistonions.txt
 	boop=`cat midway.txt |sort -g -r --field-separator=',' -k 2,2 -k 3 | column -ts,`
 	echo -e "\n${boop}\n\n$(( $recs - $recssm )) nodes with an .onion address over threshold of $threshold satoshi :   \e[38;5;122m$recstg targets    \e[38;5;241m$recstb mixed    \e[38;5;113m$recscg connected pure onion   \e[38;5;111m$recscb connected mixed\n"
 rm -f midway.txt

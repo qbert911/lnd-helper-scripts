@@ -31,7 +31,7 @@ echo "------- Pending: -------"
 lncli pendingchannels | jq -r '[.pending_open_channels[].channel.capacity]|add'
 
 echo "----- Forwarding: ------"
-lncli fwdinghistory |jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
+lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
 
 #echo "Mine---Fee---Lbs--P/kw-------------------------------------Committed: ${commitfees}"
 #lncli listchannels | jq -r '.channels[] | [(.initiator|#tostring),.commit_fee,.commit_weight,.fee_per_kw,.local_balance,.remote_balance,.total_satoshis_sent,.total_satoshis_received] | join("," )'|column -ts,
