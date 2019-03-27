@@ -27,14 +27,15 @@ while : ;do
   walletbal=`eval lncli walletbalance |jq -r '.total_balance'`
 	unc=`eval lncli walletbalance |jq -r '.unconfirmed_balance'`
   income=`eval lncli feereport | jq -r '.month_fee_sum'`
-  limbo=`eval lncli pendingchannels | jq -r '.total_limbo_balance'`
-  limbot=`eval lncli pendingchannels |grep _matur| cut -d":" -f2|tr -d "\n,"`
+  limbo=`cat rawoutp.txt | jq -r '.total_limbo_balance'`
+  limbot=`cat rawoutp.txt |grep _matur| cut -d":" -f2|tr -d "\n,"`
   fwding=`eval lncli fwdinghistory |jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'`
   recs=$((-1))  #so we don't count self
   eval lncli getinfo | jq -r '[.identity_pubkey,"","'${mybalc}'","'${incc}'","--me--"," "," "," "," "]| join("," )' >> nodelist.txt  #add own node to list
 #--------------combiner-------------------------------------------------------
   rm -f combined.txt
   sort nodelist.txt -o nodelist.txt
+  if  ! test -f "webdata.txt" ; then sleep 1; echo -e "Waiting while buildwebdb updates data from 1ml.com\033[99D";continue; fi
   while read -r thisID capacity balance incoming cstate init cf cw fpk && read -r thatID title thiscapacity thisconnectedcount avgchancap thisbiggestchan age color city state country junk <&3; do
     : $((recs++))
     if [ "$thisID" = "$thatID" ];then
