@@ -5,8 +5,8 @@ myconnections=`eval lncli listchannels | jq -r '.channels[].remote_pubkey'`
 mypending=`eval lncli pendingchannels | jq -r '.pending_open_channels[].channel.remote_node_pub'`
 mypendingc=`eval lncli pendingchannels | jq -r '.pending_force_closing_channels[].channel.remote_node_pub'`
 blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="REMOTE_FORCE_CLOSE" or .close_type=="LOCAL_FORCE_CLOSE") |.remote_pubkey'`
-recscb=$(( 0 ))
-threshold="20000000"
+threshold="10000000"
+rm -f nodelisttargets.txt
 echo -n "Searching all known nodes..."
 lncli describegraph | jq -r '[.nodes[]|select(.addresses[].addr|contains("onion"))|.pub_key]|unique|.[]' > nodelistonions.txt
 echo -e -n "\n $( wc -l nodelistonions.txt | sed -e 's/ .*//') found with an .onion address"
@@ -37,7 +37,7 @@ if (( $min == "1" ));then
     "mixed" | "BLACKLIST" | "no")   : $((recstb++))        ;;
     "connected" | "CONmix")         : $((recscb++))        ;;
     "allset" | "multio" | "me")     : $((recscg++))        ;;
-    "target" | "multi")             : $((recstg++))        ;;
+    "target" | "multi")             : $((recstg++));echo $thisID >> nodelisttargets.txt       ;;
   esac  
 	echo -e "\e[38;5;$color , $channels,$(echo "scale=8; $capa / 100000000" | bc -ql ),"$title",$status,$thisIDd \e[0m" >> midway.txt
 else

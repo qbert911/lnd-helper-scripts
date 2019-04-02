@@ -14,7 +14,7 @@ fi
 echo $ip
 echo $thisID
 echo
-curl -s https://1ml.com/node/$thisID |grep "<h1>Node" |pup h1 text{}| tr -d '()'
+lncli getnodeinfo ${thisID} |jq -r '.node.alias'
 echo
 echo $2 satoshis
 echo $(echo "scale=8; $2 / 100000000" | bc -ql ) btc
