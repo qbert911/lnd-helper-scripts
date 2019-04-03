@@ -9,7 +9,7 @@ If you like my work please consider connecting to my (secure tor) node to provid
 ### Fleshed Out
 - feereview.sh  
 - historylog.sh  
-- infer.sh  
+- inferonions.sh  
 - routetrace.sh
 - sendtomyroute.sh *(in progress)*
 ### Middle
