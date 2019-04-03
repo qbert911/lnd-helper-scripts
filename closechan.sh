@@ -6,6 +6,8 @@ if [[ -n $1 ]];then
 	echo $thisID
 	echo "Index: $idx "
 	echo
+	lncli getnodeinfo ${thisID} |jq -r '.node.alias'
+	echo
 	read -p "Are you sure you want CLOSE? " -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]];then
 		echo -e "\nOK..."
