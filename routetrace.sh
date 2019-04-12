@@ -11,13 +11,14 @@ lncli queryroutes --num_max_routes 15 ${t1} ${t2} |jq -r '.routes[]|[(.total_fee
 while read -r fees  thisID  thisID2  thisID3  thisID4 thisID5 extradata ; do
   : $((recs++))
   title=`eval lncli getnodeinfo ${thisID} |jq -r '.node.alias'`
+  key=`eval lncli getnodeinfo ${thisID} |jq -r '.node.pub_key'`
   title2=`eval lncli getnodeinfo ${thisID2} |jq -r '.node.alias'`
 	ip=`eval lncli getnodeinfo ${thisID} |jq -r 'first(.node.addresses[].addr)'`
   ip2=`eval lncli getnodeinfo ${thisID2} |jq -r 'first(.node.addresses[].addr)'`
   color="001m"; if [[ $ip == *"n:"* ]];then color="113m"; fi
   color2="001m"; if [[ $ip2 == *"n:"* ]];then color2="113m"; fi
   if [[ ${thisID2} == $t1 ]];then color2="122m"; fi
-  echo -e -n "$fees \e[38;5;$color $title\e[0m  -> \e[38;5;$color2 $title2\e[0m"
+          echo -e -n "$key | fee: $fees \e[38;5;$color  $title\e[0m   -> \e[38;5;$color2 $title2\e[0m  "
 
 if [[ -n "$thisID3" ]];then 
   title3=`eval lncli getnodeinfo ${thisID3} |jq -r '.node.alias'`
