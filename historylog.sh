@@ -8,6 +8,9 @@ commitfees=`eval lncli listchannels | jq -s '[.[].channels[]|select(.initiator==
 echo "Age---Amount-----Fee-----Txns:  ${bal2}"
 lncli listchaintxns | jq -r '.transactions[]|[.num_confirmations,(.amount|tostring),.total_fees|tostring]|join("," )'|sort -grt, |column -ts, -n
 
+echo "----- Forwarding: ------"
+lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
+
 echo "Age---Amount-------------Coins: ${bal1}"
 lncli listunspent |jq -r '.utxos[]|[.confirmations,.amount_sat|tostring]|join(",")'|sort -grt, |column -ts,
 
@@ -25,13 +28,12 @@ litpayments=`eval lncli listpayments | jq -r '[.payments[]|.fee|tonumber]|add'`
 echo "${litpayments} in lightning payment fees"
 
 echo "-------- Income: -------"
-lncli feereport | jq -r '.month_fee_sum'
+income=`eval lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -r '[.forwarding_events[]|(.fee_msat|tonumber)]|add'`
+echo "${income} msats earned from lightning payment fees"
 
 echo "------- Pending: -------"
 lncli pendingchannels | jq -r '[.pending_open_channels[].channel.capacity]|add'
 
-echo "----- Forwarding: ------"
-lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
 
 #echo "Mine---Fee---Lbs--P/kw-------------------------------------Committed: ${commitfees}"
 #lncli listchannels | jq -r '.channels[] | [(.initiator|#tostring),.commit_fee,.commit_weight,.fee_per_kw,.local_balance,.remote_balance,.total_satoshis_sent,.total_satoshis_received] | join("," )'|column -ts,

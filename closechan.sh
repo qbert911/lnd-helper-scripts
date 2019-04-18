@@ -19,6 +19,7 @@ if [[ -n $1 ]];then
 		echo -e "\nOK..."
 		lncli closechannel --sat_per_byte 1 --funding_txid $thisID --output_index $idx
 	fi
+	echo 
 else
 	lncli listchannels | jq -r '.channels[] | [.remote_pubkey[0:6],.capacity,.local_balance,.remote_balance,.total_satoshis_sent,.total_satoshis_received,.chan_id]|join(",")'|sort --field-separator=',' -k 1|sort --field-separator=',' -n -k 5,5 -k 6,6 -k 4,4 -k 2,2  |column -n -ts,
 fi
