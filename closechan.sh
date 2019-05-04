@@ -12,7 +12,7 @@ if [[ -n $1 ]];then
 		read -p "Are you sure you want CLOSE? " -n 1 -r
 		if [[ $REPLY =~ ^[Yy]$ ]];then
 			echo -e "\nOK..."
-			lncli closechannel --sat_per_byte 1 --funding_txid $thisID --output_index $idx
+			lncli closechannel --sat_per_byte 1 --funding_txid $thisID --output_index $idx $2
 		fi
 	fi	
 	echo 	
