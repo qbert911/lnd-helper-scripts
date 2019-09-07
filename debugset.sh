@@ -1,3 +1,2 @@
 #!/bin/bash -x
-lncli debuglevel --level RPCS=warn,CMGR=critical,DISC=warn,PEER=critical,CRTR=warn,CHDB=warn,SRVR=critical,NTFN=warn,UTXN=warn,SWPR=warn,HSWC=critical,CNCT=warn,NANN=critical
-
+lncli debuglevel --level CHDB=warn,CMGR=critical,CNCT=warn,CRTR=warn,DISC=warn,FNDG=warn,HSWC=critical,NANN=critical,NTFN=warn,PEER=critical,RPCS=warn,SRVR=critical,SWPR=warn,UTXN=warn

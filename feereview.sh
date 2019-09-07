@@ -45,7 +45,7 @@ else chanfees2a=-999;chanfees2b=-999;fi
   echo -n "."
   echo  "${thischanID}  |,$mytitle,$chanfees1a,$chanfees1b,<-->,\e[38;5;$color2a,$chanfees2a,\e[38;5;$color2b,$chanfees2b\e[0m,$title2,$ini,$chan2,$cap2,$tsr,$tss"  >> midway.txt
 done <nchannelfees.txt
-boop=`cat midway.txt |sort -g -r --field-separator=',' -k 11,11 -k 7,7 -k 9,9 -k 13 | column -ts,`
+boop=`cat midway.txt |sort -g -r --field-separator=',' -k 15,15 -k 14,14 -k 9,9 -k 7,7 | column -ts,`
 echo -e -n "\n${boop}\n $recs channels    msats earned in fees: "
 rm -f midway.txt tempchandata.json nchannelfees.txt
 lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -r '[.forwarding_events[]|(.fee_msat|tonumber)]|add'

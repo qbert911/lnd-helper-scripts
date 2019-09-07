@@ -6,7 +6,8 @@ echo "Age---Amount-----Fee-----Txns:  $(lncli listchaintxns | jq -r '[.transacti
 lncli listchaintxns | jq -r '.transactions[]|[.num_confirmations,(.amount|tostring),.total_fees|tostring]|join("," )'|sort -grt, |column -ts, -n
 
 echo "----- Forwarding: ------"
-lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
+lncli fwdinghistory --start_time 5000 --end_time 1558698558|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
+lncli fwdinghistory --end_time 5000000000000000 --start_time 1558698558|jq -c '.forwarding_events[]|[.amt_in,.amt_out,.fee,.fee_msat]'
 
 echo "Age---Amount---Closed Channels-----Capacity--TimeLock-Remote-----------------Closing transaction hash--------------------------"
 lncli closedchannels | jq -r '.channels[]|select(.settled_balance!="0")|['$currheight'-(.close_height|tonumber),.settled_balance,.close_type, .capacity,.time_locked_balance,(.capacity|tonumber)-(.settled_balance|tonumber),.closing_tx_hash|tostring]|join(",")'|column -ts,
@@ -20,7 +21,9 @@ echo "$(lncli closedchannels | jq -r '[.channels[]|select(.settled_balance!="0" 
 echo "$(lncli listpayments | jq -r '[.payments[]|.fee|tonumber]|add') in lightning payment fees"
 
 echo "-------- Income: -------"
-echo "$(lncli fwdinghistory --start_time 5000 --end_time 50000000000000000|jq -r '[.forwarding_events[]|(.fee_msat|tonumber)]|add') msats earned from lightning payment fees"
+a=$(lncli fwdinghistory --start_time 5000 --end_time 1558698558|jq -r '[.forwarding_events[]|(.fee_msat|tonumber)]|add')
+b=$(lncli fwdinghistory --end_time 5000000000000000 --start_time 1558698558|jq -r '[.forwarding_events[]|(.fee_msat|tonumber)]|add')
+echo "$(( $a + $b )) msats earned from lightning payment fees"
 
 echo "------- Pending: -------"
 lncli pendingchannels | jq -r '[.pending_open_channels[].channel.capacity]|add'

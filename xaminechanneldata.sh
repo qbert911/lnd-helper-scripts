@@ -21,5 +21,7 @@ while read -r thisID extradata; do
 	echo -e "$channels,$(echo "scale=8; $capa / 100000000" | bc -ql ),$score,$score2,$score3,$(( $score2 + $score3 )),$title ,$thisID" >> midway.txt 
   echo -en "\e[38;5;229m⚡"
 done <${dispfile}
-	boop=`cat midway.txt |sort -g -r --field-separator=',' -k 5,5 -k 6,6 -k 4,4 -k 3 | column -ts,`
-	echo -e "\e[0m \n${boop}\n $(( $(date +%s) - $START )) seconds ";rm -f midway.txt nxx.txt nyy.txt nzz.txt
+header="channels,capacity,good Channels,2hop,3hop,2+3,name,key"
+echo -e "\e[0m"
+echo -e "${header}\n`cat midway.txt |sort -g -r --field-separator=',' -k 6,6 -k 5,5 -k 4,4 -k 3 `" | column -ts,  
+echo -e "\e[0m \n $(( $(date +%s) - $START )) seconds ";rm -f midway.txt nxx.txt nyy.txt nzz.txt
