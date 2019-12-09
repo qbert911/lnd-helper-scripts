@@ -8,6 +8,8 @@ if [[ -n $1 ]];then
 	echo
 	if [[ $2 == "hot" ]];then
 		lncli closechannel --sat_per_byte 1 --funding_txid $thisID --output_index $idx
+	elif [[ $2 == "force" ]];then
+		lncli closechannel --funding_txid $thisID --output_index $idx --force
 	else	
 		read -p "Are you sure you want CLOSE? " -n 1 -r
 		if [[ $REPLY =~ ^[Yy]$ ]];then

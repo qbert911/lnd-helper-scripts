@@ -5,7 +5,7 @@ myconnections=`eval lncli listchannels | jq -r '.channels[].remote_pubkey'`
 mypending=`eval lncli pendingchannels | jq -r '.pending_open_channels[].channel.remote_node_pub'`
 mypendingc=`eval lncli pendingchannels | jq -r '.pending_force_closing_channels[].channel.remote_node_pub'`
 blacklist=`eval lncli closedchannels | jq -r '.channels[]|select(.close_type=="REMOTE_FORCE_CLOSE" or .close_type=="LOCAL_FORCE_CLOSE") |.remote_pubkey'`
-threshold="20000000"
+threshold="100000000"
 rm -f nodelisttargets.txt
 echo -n "Searching all known nodes..."
 lncli describegraph | jq -r '[.nodes[]|select(.addresses[].addr|contains("onion"))|.pub_key]|unique|.[]' > nodelistonions.txt

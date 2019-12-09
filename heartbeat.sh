@@ -1,12 +1,12 @@
 #!/bin/bash
-tblok=$(curl -s --user bongos:goobers --data-binary '{"method": "getblockchaininfo", "params": [] }' http://192.168.1.26:8332/ | jq '.result.blocks')
-nmempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://192.168.1.26:8332/ | jq '.result.size')
+tblok=$(curl -s --user bongos:goobers --data-binary '{"method": "getblockchaininfo", "params": [] }' http://127.0.0.1:8332/ | jq '.result.blocks')
+nmempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://127.0.0.1:8332/ | jq '.result.size')
 maxbarlen=$((120)) 
 while : ;do
   START=$(date +%s)
   oldblok=$tblok
   while [[ "$tblok" = "$oldblok" ]]; do
-    mempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://192.168.1.26:8332/ | jq '.result.size')
+    mempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://127.0.0.1:8332/ | jq '.result.size')
     RUNTIME=$(( $(date +%s) - $START ))
     case "$((RUNTIME/60%60/10))$((RUNTIME/60%10))" in
      (0[0-7])      cola="\e[38;5;070m";colb="\e[38;5;229m";;
@@ -54,10 +54,10 @@ while : ;do
     fi
     echo -en "${out} \$$usdprice"
     sleep 1
-    tblok=$(curl -s --user bongos:goobers --data-binary '{"method":"getblockchaininfo","params":[]}' http://192.168.1.26:8332/ | jq '.result.blocks')
+    tblok=$(curl -s --user bongos:goobers --data-binary '{"method":"getblockchaininfo","params":[]}' http://127.0.0.1:8332/ | jq '.result.blocks')
   done 
 #------------------------------------------------------------------------------
-  nmempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://192.168.1.26:8332/ | jq '.result.size')
+  nmempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://127.0.0.1:8332/ | jq '.result.size')
 #  while [ "$mempool" -lt "$nmempool" ] && [ "$RUNTIME" -gt "10" ]; do 
 #    sleep 1;aplay -q sms2.wav;  aplay -q sms2.wav;  aplay -q sms2.wav
 #    nmempool=$(curl -s --user bongos:goobers --data-binary '{"method": "getmempoolinfo", "params": [] }' http://192.168.1.26:8332/ | jq '.result.size')
